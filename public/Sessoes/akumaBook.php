@@ -29,7 +29,7 @@
     ?>
 
     <div class="row">
-        <? foreach ($page as $akuma) : ?>
+        <?php foreach ($page as $akuma) : ?>
             <div class="col col-xs-4 h-100">
                 <div class="panel panel-default h-100">
                     <div class="panel-body">
