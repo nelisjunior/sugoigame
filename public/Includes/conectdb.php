@@ -93,3 +93,6 @@ $protector = new Protector($userDetails, $response);
 require_once(dirname(__FILE__)."/../Cron/cron.php");
 
 
+
+// Modern Services
+require_once __DIR__ . '/../Classes/ModernServicesBootstrap.php';
