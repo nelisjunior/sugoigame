@@ -1,0 +1,20 @@
+parameters:
+    level: 6
+    paths:
+        - public/Classes
+        - public/Funcoes
+        - public/Utils
+    excludePaths:
+        - public/Includes/*
+        - public/JS/*
+        - public/CSS/*
+        - vendor/*
+    ignoreErrors:
+        # Ignorar erros específicos durante a migração
+        - '#Call to function is_callable\(\) with string will always evaluate to true#'
+        - '#Access to an undefined property#'
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+    reportUnmatchedIgnoredErrors: false
+    parallel:
+        maximumNumberOfProcesses: 4
