@@ -1,0 +1,300 @@
+{
+  "nodes": [
+    {
+      "type": "text",
+      "text": "# Combat Flow Galaxy\n\nVisualization of combat system interactions",
+      "id": "combat-center",
+      "x": 0,
+      "y": 0,
+      "width": 300,
+      "height": 80,
+      "color": "1"
+    },
+    {
+      "type": "text",
+      "text": "## Player 1\n- Initiate combat\n- Execute actions\n- Strategic decisions",
+      "id": "player1",
+      "x": -400,
+      "y": -300,
+      "width": 200,
+      "height": 100,
+      "color": "2"
+    },
+    {
+      "type": "text", 
+      "text": "## Player 2\n- Accept/Decline\n- Respond to attacks\n- Counter strategies",
+      "id": "player2",
+      "x": 400,
+      "y": -300,
+      "width": 200,
+      "height": 100,
+      "color": "3"
+    },
+    {
+      "type": "text",
+      "text": "## Combat Engine\n- Turn management\n- Damage calculation\n- Victory conditions\n- Effect processing",
+      "id": "engine",
+      "x": 0,
+      "y": -200,
+      "width": 250,
+      "height": 120,
+      "color": "4"
+    },
+    {
+      "type": "text",
+      "text": "## Battle Board\n- 7x7 grid system\n- Character positioning\n- Movement validation\n- Area of effect",
+      "id": "board",
+      "x": -300,
+      "y": 100,
+      "width": 200,
+      "height": 120,
+      "color": "5"
+    },
+    {
+      "type": "text", 
+      "text": "## Skills & Abilities\n- Haki powers\n- Akuma no Mi\n- Special attacks\n- Status effects",
+      "id": "skills",
+      "x": 300,
+      "y": 100,
+      "width": 200,
+      "height": 120,
+      "color": "6"
+    },
+    {
+      "type": "text",
+      "text": "## AI System\n- NPC behavior\n- Bot opponents\n- Difficulty scaling\n- Smart targeting",
+      "id": "ai",
+      "x": -200,
+      "y": 300,
+      "width": 200,
+      "height": 100,
+      "color": "1"
+    },
+    {
+      "type": "text",
+      "text": "## Rewards System\n- Experience points\n- Berries earned\n- Reputation changes\n- Item drops",
+      "id": "rewards",
+      "x": 200,
+      "y": 300,
+      "width": 200,
+      "height": 100,
+      "color": "2"
+    },
+    {
+      "type": "text",
+      "text": "## Combat Types",
+      "id": "types-header",
+      "x": -600,
+      "y": -100,
+      "width": 150,
+      "height": 50,
+      "color": "3"
+    },
+    {
+      "type": "text",
+      "text": "### PvP\n- Player challenges\n- Ranked battles\n- Reputation system",
+      "id": "pvp",
+      "x": -750,
+      "y": 0,
+      "width": 150,
+      "height": 100,
+      "color": "4"
+    },
+    {
+      "type": "text",
+      "text": "### PvE\n- Random encounters\n- Boss battles\n- Campaign mode",
+      "id": "pve", 
+      "x": -750,
+      "y": 120,
+      "width": 150,
+      "height": 100,
+      "color": "5"
+    },
+    {
+      "type": "text",
+      "text": "### Coliseum\n- Bot opponents\n- Automated combat\n- Practice mode",
+      "id": "coliseum",
+      "x": -750,
+      "y": 240,
+      "width": 150,
+      "height": 100,
+      "color": "6"
+    },
+    {
+      "type": "text",
+      "text": "## Data Layer",
+      "id": "data-header",
+      "x": 600,
+      "y": -100,
+      "width": 150,
+      "height": 50,
+      "color": "1"
+    },
+    {
+      "type": "text",
+      "text": "### Combat Log\n- Battle history\n- Action records\n- Performance stats",
+      "id": "combat-log",
+      "x": 750,
+      "y": 0,
+      "width": 150,
+      "height": 100,
+      "color": "2"
+    },
+    {
+      "type": "text",
+      "text": "### Character State\n- HP/MP tracking\n- Position data\n- Status effects",
+      "id": "char-state",
+      "x": 750,
+      "y": 120,
+      "width": 150,
+      "height": 100,
+      "color": "3"
+    },
+    {
+      "type": "text",
+      "text": "### Session Data\n- Active combats\n- Turn tracking\n- Temporary data",
+      "id": "session-data",
+      "x": 750,
+      "y": 240,
+      "width": 150,
+      "height": 100,
+      "color": "4"
+    }
+  ],
+  "edges": [
+    {
+      "id": "p1-engine",
+      "fromNode": "player1",
+      "toNode": "engine",
+      "color": "2",
+      "label": "Actions"
+    },
+    {
+      "id": "p2-engine",
+      "fromNode": "player2", 
+      "toNode": "engine",
+      "color": "3",
+      "label": "Actions"
+    },
+    {
+      "id": "engine-center",
+      "fromNode": "engine",
+      "toNode": "combat-center",
+      "color": "4"
+    },
+    {
+      "id": "engine-board",
+      "fromNode": "engine",
+      "toNode": "board",
+      "color": "4"
+    },
+    {
+      "id": "engine-skills",
+      "fromNode": "engine",
+      "toNode": "skills",
+      "color": "4"
+    },
+    {
+      "id": "board-center",
+      "fromNode": "board",
+      "toNode": "combat-center",
+      "color": "5"
+    },
+    {
+      "id": "skills-center",
+      "fromNode": "skills",
+      "toNode": "combat-center",
+      "color": "6"
+    },
+    {
+      "id": "center-ai",
+      "fromNode": "combat-center",
+      "toNode": "ai",
+      "color": "1"
+    },
+    {
+      "id": "center-rewards",
+      "fromNode": "combat-center",
+      "toNode": "rewards",
+      "color": "2"
+    },
+    {
+      "id": "types-pvp",
+      "fromNode": "types-header",
+      "toNode": "pvp",
+      "color": "3"
+    },
+    {
+      "id": "types-pve",
+      "fromNode": "types-header", 
+      "toNode": "pve",
+      "color": "3"
+    },
+    {
+      "id": "types-coliseum",
+      "fromNode": "types-header",
+      "toNode": "coliseum",
+      "color": "3"
+    },
+    {
+      "id": "pvp-center",
+      "fromNode": "pvp",
+      "toNode": "combat-center",
+      "color": "4",
+      "label": "PvP Flow"
+    },
+    {
+      "id": "pve-center",
+      "fromNode": "pve",
+      "toNode": "combat-center",
+      "color": "5",
+      "label": "PvE Flow"
+    },
+    {
+      "id": "coliseum-center",
+      "fromNode": "coliseum",
+      "toNode": "combat-center",
+      "color": "6",
+      "label": "Bot Flow"
+    },
+    {
+      "id": "data-log",
+      "fromNode": "data-header",
+      "toNode": "combat-log",
+      "color": "1"
+    },
+    {
+      "id": "data-char",
+      "fromNode": "data-header",
+      "toNode": "char-state",
+      "color": "1"
+    },
+    {
+      "id": "data-session",
+      "fromNode": "data-header",
+      "toNode": "session-data",
+      "color": "1"
+    },
+    {
+      "id": "center-log",
+      "fromNode": "combat-center",
+      "toNode": "combat-log",
+      "color": "2",
+      "label": "Logging"
+    },
+    {
+      "id": "center-char",
+      "fromNode": "combat-center",
+      "toNode": "char-state",
+      "color": "3",
+      "label": "State Updates"
+    },
+    {
+      "id": "center-session",
+      "fromNode": "combat-center",
+      "toNode": "session-data",
+      "color": "4",
+      "label": "Session Management"
+    }
+  ]
+}

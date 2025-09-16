@@ -1,0 +1,172 @@
+{
+  "nodes": [
+    {
+      "type": "text",
+      "text": "# Sugoi Game - One Piece MMORPG\n\nCore do sistema de jogo baseado no universo One Piece",
+      "id": "main",
+      "x": 0,
+      "y": 0,
+      "width": 250,
+      "height": 100,
+      "color": "1"
+    },
+    {
+      "type": "text", 
+      "text": "## Frontend\n- HTML/CSS/JS\n- Bootstrap\n- jQuery\n- Interface responsiva",
+      "id": "frontend",
+      "x": -400,
+      "y": -200,
+      "width": 200,
+      "height": 120,
+      "color": "2"
+    },
+    {
+      "type": "text",
+      "text": "## PHP Backend\n- Core em PHP\n- Session management\n- Authentication\n- Game API",
+      "id": "backend",
+      "x": 400,
+      "y": -200,
+      "width": 200,
+      "height": 120,
+      "color": "3"
+    },
+    {
+      "type": "text",
+      "text": "## Combat System\n- Turn-based combat\n- PvP battles\n- PvE encounters\n- Strategic positioning",
+      "id": "combat",
+      "x": -300,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "color": "4"
+    },
+    {
+      "type": "text",
+      "text": "## Character System\n- Tripulação management\n- Leveling system\n- Haki powers\n- Akuma no Mi",
+      "id": "characters",
+      "x": 300,
+      "y": 200,
+      "width": 200,
+      "height": 120,
+      "color": "5"
+    },
+    {
+      "type": "text",
+      "text": "## Database\n- MySQL\n- 50+ tables\n- User data\n- Game state",
+      "id": "database",
+      "x": 0,
+      "y": 400,
+      "width": 200,
+      "height": 120,
+      "color": "6"
+    },
+    {
+      "type": "text",
+      "text": "## Real-time Services\n- Chat Server (Node.js)\n- Map Server (WebSocket)\n- Live updates",
+      "id": "realtime",
+      "x": -600,
+      "y": 0,
+      "width": 200,
+      "height": 120,
+      "color": "1"
+    },
+    {
+      "type": "text",
+      "text": "## Alliance System\n- Guilds\n- Wars\n- Cooperation\n- Shared resources",
+      "id": "alliances",
+      "x": 600,
+      "y": 0,
+      "width": 200,
+      "height": 120,
+      "color": "2"
+    },
+    {
+      "type": "text",
+      "text": "## Economy\n- Berries (game currency)\n- Gold (premium)\n- Item trading\n- Payment integration",
+      "id": "economy",
+      "x": -200,
+      "y": -400,
+      "width": 200,
+      "height": 120,
+      "color": "3"
+    },
+    {
+      "type": "text",
+      "text": "## Navigation\n- Ocean world\n- Islands\n- Coordinate system\n- Real-time movement",
+      "id": "navigation",
+      "x": 200,
+      "y": -400,
+      "width": 200,
+      "height": 120,
+      "color": "4"
+    }
+  ],
+  "edges": [
+    {
+      "id": "frontend-main",
+      "fromNode": "frontend",
+      "toNode": "main",
+      "color": "2"
+    },
+    {
+      "id": "backend-main", 
+      "fromNode": "backend",
+      "toNode": "main",
+      "color": "3"
+    },
+    {
+      "id": "main-combat",
+      "fromNode": "main",
+      "toNode": "combat",
+      "color": "4"
+    },
+    {
+      "id": "main-characters",
+      "fromNode": "main", 
+      "toNode": "characters",
+      "color": "5"
+    },
+    {
+      "id": "main-database",
+      "fromNode": "main",
+      "toNode": "database", 
+      "color": "6"
+    },
+    {
+      "id": "realtime-frontend",
+      "fromNode": "realtime",
+      "toNode": "frontend",
+      "color": "1"
+    },
+    {
+      "id": "backend-alliances",
+      "fromNode": "backend",
+      "toNode": "alliances",
+      "color": "2"
+    },
+    {
+      "id": "economy-backend",
+      "fromNode": "economy",
+      "toNode": "backend",
+      "color": "3"
+    },
+    {
+      "id": "navigation-backend",
+      "fromNode": "navigation",
+      "toNode": "backend",
+      "color": "4"
+    },
+    {
+      "id": "combat-database",
+      "fromNode": "combat",
+      "toNode": "database",
+      "color": "4"
+    },
+    {
+      "id": "characters-database",
+      "fromNode": "characters",
+      "toNode": "database",
+      "color": "5"
+    }
+  ]
+}
