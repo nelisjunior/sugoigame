@@ -1,4 +1,112 @@
-public/ComponentesCache
-servers/vendor
-sql/
+# =========================
+# Dependencies & Packages
+# =========================
+vendor/
+node_modules/
+composer.phar
+
+# =========================
+# Build & Cache Directories
+# =========================
+public/ComponentesCache/
+build/
+dist/
+.cache/
+
+# =========================
+# Environment & Configuration
+# =========================
+.env
+.env.local
+.env.*.local
+config/local.php
+config/database.local.php
+
+# =========================
+# IDE & Editor Files
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs & Debug Files
+# =========================
 *.log
+logs/
+debug.log
+error.log
+access.log
+php_errors.log
+
+# =========================
+# Database & SQL Files
+# =========================
+sql/
+*.sql
+!database/schema.sql
+*.sqlite
+*.db
+
+# =========================
+# Temporary & Runtime Files
+# =========================
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+sessions/
+uploads/temp/
+
+# =========================
+# Testing & Coverage
+# =========================
+coverage/
+.phpunit.cache/
+.phpunit.result.cache
+phpunit.xml.dist
+
+# =========================
+# Security & Sensitive Data
+# =========================
+*.key
+*.pem
+*.crt
+*.p12
+secrets.json
+
+# =========================
+# Server-specific Directories
+# =========================
+servers/vendor/
+
+# =========================
+# Backup Files
+# =========================
+*.backup
+*.bak
+*.old
+*~
+
+# =========================
+# OS Generated Files
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =========================
+# Development Tools
+# =========================
+.phpstan.cache
+.php-cs-fixer.cache
+.phpcs.cache
