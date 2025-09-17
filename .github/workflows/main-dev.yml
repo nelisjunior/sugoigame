@@ -1,0 +1,115 @@
+name: Deploy to Production (Development Version)
+
+on:
+  push:
+    branches: [ prod ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+
+env:
+  DEPLOY_PATH: /var/www/html
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Check deployment readiness
+        run: |
+          echo "🔍 Verificando pré-requisitos para deploy..."
+          
+          # Verificar se os secrets estão configurados
+          if [ -z "${{ secrets.HOST }}" ]; then
+            echo "⚠️  SECRET 'HOST' não configurado"
+            echo "📝 Configure em: Settings → Secrets and variables → Actions"
+            MISSING_SECRETS=true
+          fi
+          
+          if [ -z "${{ secrets.USERNAME }}" ]; then
+            echo "⚠️  SECRET 'USERNAME' não configurado"
+            MISSING_SECRETS=true
+          fi
+          
+          if [ -z "${{ secrets.KEY }}" ]; then
+            echo "⚠️  SECRET 'KEY' não configurado"
+            MISSING_SECRETS=true
+          fi
+          
+          if [ "$MISSING_SECRETS" = "true" ]; then
+            echo ""
+            echo "❌ Deploy cancelado - Secrets não configurados"
+            echo ""
+            echo "📋 Para configurar os secrets necessários:"
+            echo "1. Vá para Settings → Secrets and variables → Actions"
+            echo "2. Adicione os seguintes secrets:"
+            echo "   - HOST: endereço do servidor (ex: meuservidor.com)"
+            echo "   - USERNAME: usuário SSH (ex: ubuntu)"
+            echo "   - KEY: chave privada SSH completa"
+            echo "   - PORT: porta SSH (opcional, padrão: 22)"
+            exit 1
+          fi
+          
+          echo "✅ Todos os secrets estão configurados"
+          
+      - name: Simulate deployment steps
+        run: |
+          echo "🚀 Simulando deploy..."
+          echo "📁 Diretório de deploy: ${{ env.DEPLOY_PATH }}"
+          echo "🎯 Branch: ${{ github.ref_name }}"
+          echo "📝 Commit: ${{ github.sha }}"
+          echo ""
+          echo "Etapas que serão executadas:"
+          echo "1. ✅ Conectar via SSH"
+          echo "2. ✅ Criar backup"
+          echo "3. ✅ Atualizar código (git pull)"
+          echo "4. ✅ Instalar dependências (composer)"
+          echo "5. ✅ Limpar cache"
+          echo ""
+          echo "🎉 Deploy simulado com sucesso!"
+          
+      - name: Deploy to Server (Only if secrets are configured)
+        if: secrets.HOST != '' && secrets.USERNAME != '' && secrets.KEY != ''
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT || 22 }}
+          script: |
+            cd ${{ env.DEPLOY_PATH }}
+            
+            # Verificar o status atual
+            echo "=== Status do Git ==="
+            git status
+            
+            # Fazer backup antes do deploy
+            echo "=== Criando backup ==="
+            cp -r . ../backup_$(date +%Y%m%d_%H%M%S) || true
+            
+            # Atualizar código
+            echo "=== Atualizando código ==="
+            git fetch origin prod
+            git reset --hard origin/prod
+            
+            # Verificar se há dependências para atualizar
+            if [ -f "composer.json" ]; then
+              echo "=== Atualizando dependências do Composer ==="
+              composer install --no-dev --optimize-autoloader
+            fi
+            
+            # Limpar cache se necessário
+            echo "=== Limpando cache ==="
+            find . -name "*.cache" -delete || true
+            
+            echo "=== Deploy concluído com sucesso ==="
