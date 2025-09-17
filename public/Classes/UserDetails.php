@@ -48,6 +48,49 @@
  */
 class UserDetails
 {
+    // Propriedades principais para PHP 8.3+ (explicit property declarations)
+    public $conta;
+    public $tripulacao;
+    public $vip;
+    public $personagens;
+    public $rotas;
+    public $tripulacoes;
+    public $capitao;
+    public $lvl_mais_forte;
+    public $fa_mais_alta;
+    public $lvl_medico;
+    public $medicos;
+    public $navegadores;
+    public $lvl_navegador;
+    public $carpinteiros;
+    public $lvl_carpinteiro;
+    public $artesoes;
+    public $ferreiros;
+    public $mergulhadores;
+    public $lvl_mergulhador;
+    public $cartografos;
+    public $lvl_cartografo;
+    public $arqueologos;
+    public $lvl_arqueologo;
+    public $in_ilha;
+    public $ilha;
+    public $navio;
+    public $ally;
+    public $combate_pvp;
+    public $tripulacoes_pvp;
+    public $combate_pve;
+    public $combate_bot;
+    public $in_combate;
+    public $missao;
+    public $missao_r;
+    public $is_visivel;
+    public $has_ilha_envolta_me;
+    public $has_ilha_or_terra_envolta_me;
+    public $tripulacao_alive;
+    public $fila_coliseu;
+    public $lvl_coliseu;
+    public $alerts_data;
+    public $super_alerts_data;
     /**
      * @var mywrap_con
      */

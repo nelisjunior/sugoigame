@@ -28,12 +28,13 @@ jobs:
     
     steps:
       - name: Deploy to Server
+        if: ${{ secrets.HOST != '' && secrets.USERNAME != '' && secrets.KEY != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT || 22 }}
+          host: ${{ secrets.HOST || 'localhost' }}
+          username: ${{ secrets.USERNAME || 'user' }}
+          key: ${{ secrets.KEY || '' }}
+          port: ${{ secrets.PORT || '22' }}
           script: |
             cd ${{ env.DEPLOY_PATH }}
             

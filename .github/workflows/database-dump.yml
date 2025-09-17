@@ -17,10 +17,10 @@ on:
     - cron: '0 2 * * 0'
 
 env:
-  MYSQL_HOST: ${{ secrets.DB_HOST }}
-  MYSQL_USER: ${{ secrets.DB_USER }}
-  MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-  MYSQL_DATABASE: ${{ secrets.DB_NAME }}
+  MYSQL_HOST: ${{ secrets.DB_HOST || 'localhost' }}
+  MYSQL_USER: ${{ secrets.DB_USER || 'root' }}
+  MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD || '' }}
+  MYSQL_DATABASE: ${{ secrets.DB_NAME || 'sugoi_v2' }}
 
 jobs:
   database-backup:
@@ -48,7 +48,7 @@ jobs:
           --routines \
           --triggers \
           --no-data \
-          $MYSQL_DATABASE > structure_$(date +%Y%m%d_%H%M%S).sql
+          "$MYSQL_DATABASE" > "structure_$(date +%Y%m%d_%H%M%S).sql"
         
     - name: Upload structure backup
       if: ${{ github.event.inputs.backup_type == 'full' || github.event.inputs.backup_type == 'structure-only' }}
@@ -77,7 +77,7 @@ jobs:
           --ignore-table=$MYSQL_DATABASE.tb_log_acesso \
           --ignore-table=$MYSQL_DATABASE.tb_combate_log \
           --ignore-table=$MYSQL_DATABASE.tb_relatorio \
-          $MYSQL_DATABASE > data_sample_$(date +%Y%m%d_%H%M%S).sql
+          "$MYSQL_DATABASE" > "data_sample_$(date +%Y%m%d_%H%M%S).sql"
         
     - name: Upload data backup
       if: ${{ github.event.inputs.backup_type == 'full' || github.event.inputs.backup_type == 'data-only' }}
@@ -95,13 +95,19 @@ jobs:
         echo "- **Database**: $MYSQL_DATABASE" >> backup-summary.md
         echo "- **Run Number**: ${{ github.run_number }}" >> backup-summary.md
         
-        if [ -f structure_*.sql ]; then
-          echo "- **Structure Size**: $(ls -lh structure_*.sql | awk '{print $5}')" >> backup-summary.md
-        fi
+        for file in structure_*.sql; do
+          if [ -f "$file" ]; then
+            echo "- **Structure Size**: $(ls -lh "$file" | awk '{print $5}')" >> backup-summary.md
+            break
+          fi
+        done
         
-        if [ -f data_*.sql ]; then
-          echo "- **Data Size**: $(ls -lh data_*.sql | awk '{print $5}')" >> backup-summary.md
-        fi
+        for file in data_*.sql; do
+          if [ -f "$file" ]; then
+            echo "- **Data Size**: $(ls -lh "$file" | awk '{print $5}')" >> backup-summary.md
+            break
+          fi
+        done
         
     - name: Upload backup summary
       uses: actions/upload-artifact@v4

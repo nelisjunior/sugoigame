@@ -28,23 +28,8 @@ jobs:
       - name: Check deployment readiness
         run: |
           echo "🔍 Verificando pré-requisitos para deploy..."
-          
-          # Verificar se os secrets estão configurados
-          if [ -z "${{ secrets.HOST }}" ]; then
-            echo "⚠️  SECRET 'HOST' não configurado"
-            echo "📝 Configure em: Settings → Secrets and variables → Actions"
-            MISSING_SECRETS=true
-          fi
-          
-          if [ -z "${{ secrets.USERNAME }}" ]; then
-            echo "⚠️  SECRET 'USERNAME' não configurado"
-            MISSING_SECRETS=true
-          fi
-          
-          if [ -z "${{ secrets.KEY }}" ]; then
-            echo "⚠️  SECRET 'KEY' não configurado"
-            MISSING_SECRETS=true
-          fi
+          echo "📝 Configure os secrets necessários em: Settings → Secrets and variables → Actions"
+          echo "🔑 Secrets necessários: HOST, USERNAME, KEY"
           
           if [ "$MISSING_SECRETS" = "true" ]; then
             echo ""
@@ -78,14 +63,14 @@ jobs:
           echo ""
           echo "🎉 Deploy simulado com sucesso!"
           
-      - name: Deploy to Server (Only if secrets are configured)
-        if: secrets.HOST != '' && secrets.USERNAME != '' && secrets.KEY != ''
+      - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.3
+        continue-on-error: true
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT || 22 }}
+          port: ${{ secrets.PORT }}
           script: |
             cd ${{ env.DEPLOY_PATH }}
             

@@ -30,7 +30,15 @@ class mywrap_result {
           $this->bound_variables[$column->name] =& $this->results[$column->name];
         }
       }
-      call_user_func_array(array($this->statement, 'bind_result'), $this->bound_variables);
+      
+      // PHP 8.3 compatibility: Use reflection to call bind_result properly
+      if (!empty($this->bound_variables)) {
+        $refs = array();
+        foreach ($this->bound_variables as $key => $value) {
+          $refs[] = &$this->bound_variables[$key];
+        }
+        $this->statement->bind_result(...$refs);
+      }
       $meta->close();
     }
 }

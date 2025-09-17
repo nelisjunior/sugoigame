@@ -34,17 +34,21 @@ class BuffTripulacao
 
         $this->buffs_ativos = array();
         foreach ($buffs as $buff) {
-            $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            if (isset($buff["buff_id"]) && isset($this->buffs_spec[$buff["buff_id"]])) {
+                $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            }
         }
 
         $buffs = $this->connection->run("SELECT * FROM tb_buff_global WHERE expiracao > ?",
             "i", array(atual_segundo()))->fetch_all_array();
 
         foreach ($buffs as $buff) {
-            $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            if (isset($buff["buff_id"]) && isset($this->buffs_spec[$buff["buff_id"]])) {
+                $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            }
         }
 
-        $this->connection->run("DELETE FROM tb_ilha_bonus_ativo WHERE expiracao < unix_timestamp()");
+        $this->connection->run("DELETE FROM tb_ilha_bonus_ativo WHERE expiracao IS NOT NULL AND expiracao < unix_timestamp()");
 
         $buffs = $this->connection->run("SELECT * FROM tb_ilha_bonus_ativo WHERE x >= ? AND x <= ? AND y >= ? AND y <= ?",
             "iiii", array(
@@ -55,7 +59,9 @@ class BuffTripulacao
             ))->fetch_all_array();
 
         foreach ($buffs as $buff) {
-            $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            if (isset($buff["buff_id"]) && isset($this->buffs_spec[$buff["buff_id"]])) {
+                $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            }
         }
     }
 
