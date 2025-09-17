@@ -23,7 +23,7 @@ $connection->run("SET character_set_client=utf8");
 $connection->run("SET character_set_results=utf8");
 $connection->run("SET CHARACTER SET utf8");
 
-$result = $connection->run("SELECT * FROM tb_ban WHERE ip = ?", "s", $_SERVER['REMOTE_ADDR']);
+$result = $connection->run("SELECT * FROM tb_ban WHERE ip = ?", "s", isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '');
 if ($result->count()) {
     echo "Você não tem permissão para acessar esse site!";
     exit;
