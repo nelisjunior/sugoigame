@@ -7,6 +7,8 @@ class mywrap_result {
   private $bound_variables;
   private $results;
   private $statement;
+  private $columns; // Declaração explícita da propriedade para PHP 8.3+
+  private $cached;  // Propriedade para cache de resultados
 
   /**
    * Constructor -
