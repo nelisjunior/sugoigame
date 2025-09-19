@@ -50,7 +50,7 @@ class BuffTripulacao
 
         $this->connection->run("DELETE FROM tb_ilha_bonus_ativo WHERE expiracao IS NOT NULL AND expiracao < unix_timestamp()");
 
-        $buffs = $this->connection->run("SELECT * FROM tb_ilha_bonus_ativo WHERE x >= ? AND x <= ? AND y >= ? AND y <= ?",
+        $buffs = $this->connection->run("SELECT * FROM tb_ilha_bonus_ativo WHERE expiracao IS NOT NULL AND x >= ? AND x <= ? AND y >= ? AND y <= ?",
             "iiii", array(
                 $this->userDetails->tripulacao["x"] - ALCANCE_BONUS_ILHA,
                 $this->userDetails->tripulacao["x"] + ALCANCE_BONUS_ILHA,
