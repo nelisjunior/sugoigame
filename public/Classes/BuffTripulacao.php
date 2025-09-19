@@ -27,6 +27,12 @@ class BuffTripulacao
         $this->connection = $connection;
         $this->buffs_spec = DataLoader::load("buffs_tripulacao");
 
+        // Ensure tripulacao data exists before proceeding
+        if (!isset($this->userDetails->tripulacao) || !isset($this->userDetails->tripulacao["id"])) {
+            $this->buffs_ativos = array();
+            return;
+        }
+
         $this->_expira_buffs();
 
         $buffs = $this->connection->run("SELECT * FROM tb_tripulacao_buff WHERE tripulacao_id = ?",
@@ -50,23 +56,31 @@ class BuffTripulacao
 
         $this->connection->run("DELETE FROM tb_ilha_bonus_ativo WHERE expiracao IS NOT NULL AND expiracao < unix_timestamp()");
 
-        $buffs = $this->connection->run("SELECT * FROM tb_ilha_bonus_ativo WHERE expiracao IS NOT NULL AND x >= ? AND x <= ? AND y >= ? AND y <= ?",
-            "iiii", array(
-                $this->userDetails->tripulacao["x"] - ALCANCE_BONUS_ILHA,
-                $this->userDetails->tripulacao["x"] + ALCANCE_BONUS_ILHA,
-                $this->userDetails->tripulacao["y"] - ALCANCE_BONUS_ILHA,
-                $this->userDetails->tripulacao["y"] + ALCANCE_BONUS_ILHA,
-            ))->fetch_all_array();
+        // Only proceed with coordinate-based queries if tripulacao coordinates exist
+        if (isset($this->userDetails->tripulacao["x"]) && isset($this->userDetails->tripulacao["y"])) {
+            $buffs = $this->connection->run("SELECT * FROM tb_ilha_bonus_ativo WHERE expiracao IS NOT NULL AND x >= ? AND x <= ? AND y >= ? AND y <= ?",
+                "iiii", array(
+                    $this->userDetails->tripulacao["x"] - ALCANCE_BONUS_ILHA,
+                    $this->userDetails->tripulacao["x"] + ALCANCE_BONUS_ILHA,
+                    $this->userDetails->tripulacao["y"] - ALCANCE_BONUS_ILHA,
+                    $this->userDetails->tripulacao["y"] + ALCANCE_BONUS_ILHA,
+                ))->fetch_all_array();
 
-        foreach ($buffs as $buff) {
-            if (isset($buff["buff_id"]) && isset($this->buffs_spec[$buff["buff_id"]])) {
-                $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+            foreach ($buffs as $buff) {
+                if (isset($buff["buff_id"]) && isset($this->buffs_spec[$buff["buff_id"]])) {
+                    $this->buffs_ativos[] = array_merge($buff, $this->buffs_spec[$buff["buff_id"]]);
+                }
             }
         }
     }
 
     private function _expira_buffs()
     {
+        // Only proceed if tripulacao data exists
+        if (!isset($this->userDetails->tripulacao) || !isset($this->userDetails->tripulacao["id"])) {
+            return;
+        }
+        
         $this->connection->run("DELETE FROM tb_tripulacao_buff WHERE tripulacao_id = ? AND expiracao < ?",
             "ii", array($this->userDetails->tripulacao["id"], atual_segundo()));
     }
@@ -95,12 +109,14 @@ class BuffTripulacao
         $acumulado = 0;
         $buffs = $this->connection->run("SELECT * FROM tb_tripulacao_buff WHERE tripulacao_id = ?", "i", $tripulacao_id)->fetch_all_array();
         foreach ($buffs as $buff) {
-            $spec = $this->buffs_spec[$buff["buff_id"]];
-            if (isset($spec[$efeito])) {
-                if (isset($spec["nao_acumulativo"])) {
-                    $acumulado = $spec[$efeito];
-                } else {
-                    $acumulado += $spec[$efeito];
+            if (isset($buff["buff_id"]) && isset($this->buffs_spec[$buff["buff_id"]])) {
+                $spec = $this->buffs_spec[$buff["buff_id"]];
+                if (isset($spec[$efeito])) {
+                    if (isset($spec["nao_acumulativo"])) {
+                        $acumulado = $spec[$efeito];
+                    } else {
+                        $acumulado += $spec[$efeito];
+                    }
                 }
             }
         }
@@ -119,6 +135,11 @@ class BuffTripulacao
 
     public function add_buff($buff_id, $duracao)
     {
+        // Only proceed if tripulacao data exists
+        if (!isset($this->userDetails->tripulacao) || !isset($this->userDetails->tripulacao["id"])) {
+            return;
+        }
+        
         $this->connection->run("INSERT INTO tb_tripulacao_buff (tripulacao_id, buff_id, expiracao) VALUE (?,?,?)",
             "iii", array($this->userDetails->tripulacao["id"], $buff_id, atual_segundo() + $duracao));
     }
