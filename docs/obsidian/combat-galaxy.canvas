@@ -1,0 +1,43 @@
+{
+	"nodes":[
+		{"type":"text","text":"# Combat Flow Galaxy\n\nVisualization of combat system interactions","id":"combat-center","x":-155,"y":100,"width":460,"height":280,"color":"1"},
+		{"type":"text","text":"### Character State\n- HP/MP tracking\n- Position data\n- Status effects","id":"char-state","x":683,"y":255,"width":305,"height":160,"color":"3"},
+		{"type":"text","text":"### Combat Log\n- Battle history\n- Action records\n- Performance stats","id":"combat-log","x":690,"y":35,"width":290,"height":170,"color":"2"},
+		{"type":"text","text":"### Session Data\n- Active combats\n- Turn tracking\n- Temporary data","id":"session-data","x":700,"y":480,"width":270,"height":180,"color":"4"},
+		{"type":"text","text":"## Data Layer","id":"data-header","x":1160,"y":295,"width":300,"height":70,"color":"1"},
+		{"type":"text","text":"## AI System\n- NPC behavior\n- Bot opponents\n- Difficulty scaling\n- Smart targeting","id":"ai","x":-200,"y":660,"width":200,"height":320,"color":"1"},
+		{"type":"text","text":"## Rewards System\n- Experience points\n- Berries earned\n- Reputation changes\n- Item drops","id":"rewards","x":105,"y":660,"width":200,"height":320,"color":"2"},
+		{"type":"text","text":"## Battle Board\n- 7x7 grid system\n- Character positioning\n- Movement validation\n- Area of effect","id":"board","x":-250,"y":-320,"width":300,"height":240,"color":"5"},
+		{"type":"text","text":"## Skills & Abilities\n- Haki powers\n- Akuma no Mi\n- Special attacks\n- Status effects","id":"skills","x":105,"y":-330,"width":293,"height":260,"color":"6"},
+		{"type":"text","text":"## Combat Engine\n- Turn management\n- Damage calculation\n- Victory conditions\n- Effect processing","id":"engine","x":-45,"y":-716,"width":250,"height":265,"color":"4"},
+		{"type":"text","text":"## Player 1\n- Initiate combat\n- Execute actions\n- Strategic decisions","id":"player1","x":-545,"y":-686,"width":330,"height":205,"color":"2"},
+		{"type":"text","text":"## Player 2\n- Accept/Decline\n- Respond to attacks\n- Counter strategies","id":"player2","x":398,"y":-674,"width":365,"height":182,"color":"3"},
+		{"type":"text","text":"### Coliseum\n- Bot opponents\n- Automated combat\n- Practice mode","id":"coliseum","x":-830,"y":480,"width":315,"height":190,"color":"6"},
+		{"type":"text","text":"### PvE\n- Random encounters\n- Boss battles\n- Campaign mode","id":"pve","x":-842,"y":265,"width":340,"height":200,"color":"5"},
+		{"type":"text","text":"### PvP\n- Player challenges\n- Ranked battles\n- Reputation system","id":"pvp","x":-814,"y":15,"width":285,"height":240,"color":"4"},
+		{"type":"text","text":"## Combat Types","id":"types-header","x":-1240,"y":315,"width":250,"height":100,"color":"3"}
+	],
+	"edges":[
+		{"id":"p1-engine","fromNode":"player1","fromSide":"right","toNode":"engine","toSide":"left","color":"2","label":"Actions"},
+		{"id":"p2-engine","fromNode":"player2","fromSide":"left","toNode":"engine","toSide":"right","color":"3","label":"Actions"},
+		{"id":"engine-center","fromNode":"engine","fromSide":"bottom","toNode":"combat-center","toSide":"top","color":"4"},
+		{"id":"engine-board","fromNode":"engine","fromSide":"bottom","toNode":"board","toSide":"top","color":"4"},
+		{"id":"engine-skills","fromNode":"engine","fromSide":"bottom","toNode":"skills","toSide":"top","color":"4"},
+		{"id":"skills-center","fromNode":"skills","fromSide":"bottom","toNode":"combat-center","toSide":"top","color":"6"},
+		{"id":"center-ai","fromNode":"combat-center","fromSide":"bottom","toNode":"ai","toSide":"top","color":"1"},
+		{"id":"center-rewards","fromNode":"combat-center","fromSide":"bottom","toNode":"rewards","toSide":"top","color":"2"},
+		{"id":"types-pvp","fromNode":"types-header","fromSide":"right","toNode":"pvp","toSide":"left","color":"3"},
+		{"id":"types-coliseum","fromNode":"types-header","fromSide":"right","toNode":"coliseum","toSide":"left","color":"3"},
+		{"id":"pvp-center","fromNode":"pvp","fromSide":"right","toNode":"combat-center","toSide":"left","color":"4","label":"PvP Flow"},
+		{"id":"pve-center","fromNode":"pve","fromSide":"right","toNode":"combat-center","toSide":"left","color":"5","label":"PvE Flow"},
+		{"id":"coliseum-center","fromNode":"coliseum","fromSide":"right","toNode":"combat-center","toSide":"bottom","color":"6","label":"Bot Flow"},
+		{"id":"data-log","fromNode":"data-header","fromSide":"left","toNode":"combat-log","toSide":"right","color":"1"},
+		{"id":"data-char","fromNode":"data-header","fromSide":"left","toNode":"char-state","toSide":"right","color":"1"},
+		{"id":"data-session","fromNode":"data-header","fromSide":"left","toNode":"session-data","toSide":"right","color":"1"},
+		{"id":"center-log","fromNode":"combat-center","fromSide":"right","toNode":"combat-log","toSide":"left","color":"2","label":"Logging"},
+		{"id":"center-char","fromNode":"combat-center","fromSide":"right","toNode":"char-state","toSide":"left","color":"3","label":"State Updates"},
+		{"id":"center-session","fromNode":"combat-center","fromSide":"bottom","toNode":"session-data","toSide":"left","color":"4","label":"Session Management"},
+		{"id":"7a1c3912d940f9d0","fromNode":"types-header","fromSide":"right","toNode":"pve","toSide":"left","color":"3"},
+		{"id":"board-center","fromNode":"board","fromSide":"bottom","toNode":"combat-center","toSide":"top","color":"5"}
+	]
+}
