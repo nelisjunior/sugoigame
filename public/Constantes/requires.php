@@ -1,6 +1,6 @@
 <?php
 $env = 'dev';
-if ($_SERVER['HTTP_HOST'] != "localhost") {
+if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != "localhost") {
     $env = 'prod';
 }
 

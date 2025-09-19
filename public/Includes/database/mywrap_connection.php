@@ -76,14 +76,18 @@ final class mywrap_con {
     if ($stmnt = $this->link->prepare($statement)) {
 
       if ($arg_types && $params) {
+        if (empty($params)) {
+          throw new Exception('Nenhum parâmetro fornecido para a consulta preparada.');
+        }
+
         $params = is_array($params) ? array_merge(array($arg_types), $params) : array_merge(array($arg_types), array($params));
         $refs   = array();
-        foreach($params as $key => $value) {
+        foreach ($params as $key => $value) {
           $refs[$key] = &$params[$key];
         }
         $bind = call_user_func_array(array($stmnt, 'bind_param'), $refs);
         if (false === $bind) {
-          throw new Exception('bind_param() failed: ' . $this->link->error);
+          throw new Exception('bind_param() falhou: ' . $this->link->error);
         }
       }
       if ($stmnt->execute()) {

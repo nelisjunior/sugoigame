@@ -26,7 +26,7 @@
  */
 class PagSeguroPaymentMode {
 
-    private $modeList = array(
+    private static $modeList = array(
         'DEFAULT' => 'default',
         'GATEWAY' => 'gateway'
         );
@@ -73,7 +73,7 @@ class PagSeguroPaymentMode {
      */
     public static function fromValue($value) {
         try {
-            return array_search(strtoupper($value), $this->modeList);
+            return array_search(strtoupper($value), self::$modeList);
         } catch (Exception $e) {
             return NULL;
         }

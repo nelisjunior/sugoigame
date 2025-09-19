@@ -1,5 +1,24 @@
 {
-    "php.version": "7.4",
+    // PHP Configuration
+    "php.version": "8.3",
+    "php.validate.executablePath": "",
+    "php.suggest.basic": false,
+    "php.completion.enabled": true,
+    
+    // Intelephense (PHP Language Server)
+    "intelephense.files.maxSize": 5000000,
+    "intelephense.diagnostics.undefinedSymbols": true,
+    "intelephense.diagnostics.undefinedVariables": true,
+    "intelephense.diagnostics.undefinedConstants": true,
+    "intelephense.diagnostics.undefinedFunctions": true,
+    "intelephense.diagnostics.undefinedMethods": true,
+    "intelephense.diagnostics.undefinedProperties": true,
+    "intelephense.diagnostics.undefinedTypes": true,
+    "intelephense.diagnostics.deprecated": true,
+    "intelephense.completion.maxItems": 100,
+    "intelephense.format.enable": true,
+    
+    // Database Connection
     "sqltools.connections": [
         {
             "mysqlOptions": {
@@ -10,16 +29,101 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "localhost",
+            "name": "SugoiGame Local",
             "username": "root",
             "database": "sugoi_v2",
-            "password": ""
+            "password": "",
+            "connectionTimeout": 30
         }
     ],
+    
+    // Laravel/Custom Framework Configuration
     "laravel_goto_view.folders": {
         "default": "/public/Componentes",
         "js": "/resources/js/Pages",
         "vendor": "/resources/views/vendor"
     },
-    "laravel_goto_view.regex": "(?<=view\\(['\"]|Componentes::render\\(['\"]|markdown\\(['\"]|assertViewIs\\(['\"]|\\(view:.['\"]|View::make\\(['\"]|@include\\(['\"]|@extends\\(['\"]|@component\\(['\"]|Inertia::(?:render|modal)\\(['\"]|\\(component:.['\"]|<)(?:x-|livewire:|[^'\"\\s/>]+(?:\\/[^'\"\\s/>]+)*)"
+    "laravel_goto_view.regex": "(?<=view\\(['\"]|Componentes::render\\(['\"]|markdown\\(['\"]|assertViewIs\\(['\"]|\\(view:.['\"]|View::make\\(['\"]|@include\\(['\"]|@extends\\(['\"]|@component\\(['\"]|Inertia::(?:render|modal)\\(['\"]|\\(component:.['\"]|<)(?:x-|livewire:|[^'\"\\s/>]+(?:\\/[^'\"\\s/>]+)*)",
+    
+    // File Associations
+    "files.associations": {
+        "*.php": "php",
+        "*.phtml": "php",
+        "*.inc": "php"
+    },
+    
+    // Editor Configuration
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
+    },
+    
+    // PHP Specific Editor Settings
+    "[php]": {
+        "editor.tabSize": 4,
+        "editor.insertSpaces": true,
+        "editor.wordWrap": "off",
+        "editor.rulers": [120]
+    },
+    
+    // HTML/CSS Configuration
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features",
+        "editor.tabSize": 2
+    },
+    "[css]": {
+        "editor.defaultFormatter": "vscode.css-language-features",
+        "editor.tabSize": 2
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features",
+        "editor.tabSize": 2
+    },
+    
+    // Git Configuration
+    "git.ignoreLimitWarning": true,
+    "git.autofetch": true,
+    
+    // Security and Performance
+    "security.workspace.trust.untrustedFiles": "open",
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    
+    // Search Configuration
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/vendor": true,
+        "**/coverage": true,
+        "**/.git": true,
+        "**/composer.lock": true,
+        "**/package-lock.json": true
+    },
+    
+    // Files to watch
+    "files.watcherExclude": {
+        "**/vendor/**": true,
+        "**/node_modules/**": true,
+        "**/coverage/**": true,
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true
+    },
+    
+    // Extensions Configuration
+    "emmet.includeLanguages": {
+        "php": "html"
+    },
+    
+    // Terminal Configuration
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        }
+    }
 }

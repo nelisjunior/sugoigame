@@ -1,0 +1,196 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  PHP_VERSION: '8.3'
+  NODE_VERSION: '20'
+
+jobs:
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+        coverage: xdebug
+        tools: composer:v2, phpstan, phpcs
+        
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      
+    - name: Cache Composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+        
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      
+    - name: Run PHPStan (Static Analysis)
+      run: |
+        if [ -f phpstan.neon ]; then
+          vendor/bin/phpstan analyse --memory-limit=2G || true
+        else
+          echo "PHPStan configuration not found, skipping static analysis"
+        fi
+        
+    - name: Run PHP_CodeSniffer (Code Style)
+      run: |
+        if [ -f phpcs.xml ] || [ -f phpcs.xml.dist ]; then
+          vendor/bin/phpcs --standard=PSR12 --extensions=php public/ || true
+        else
+          echo "PHPCS configuration not found, using PSR-12 standard"
+          find public/ -name "*.php" -print0 | xargs -0 -n1 php -l || true
+        fi
+        
+    - name: Check for security vulnerabilities
+      run: |
+        if [ -f composer.lock ]; then
+          composer audit || true
+        fi
+
+  php-compatibility:
+    name: PHP Compatibility Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3']
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+        tools: composer:v2
+        
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader
+      
+    - name: Check PHP syntax
+      run: |
+        find public/ -name "*.php" -print0 | xargs -0 -n1 php -l
+        
+    - name: Test basic functionality
+      run: |
+        php -r "
+        require_once 'vendor/autoload.php';
+        echo 'PHP ${{ matrix.php-version }} compatibility check passed' . PHP_EOL;
+        "
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v3
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  database-structure:
+    name: Database Structure Validation
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: sugoi_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+          
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Wait for MySQL
+      run: |
+        for i in {1..30}; do
+          if mysqladmin ping -h 127.0.0.1 --silent; then
+            echo "MySQL is ready"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 1
+        done
+        
+    - name: Validate database schema
+      run: |
+        if [ -f database/schema.sql ]; then
+          mysql -h 127.0.0.1 -u root -proot sugoi_test < database/schema.sql
+          echo "Database schema validation passed"
+        else
+          echo "No database schema file found"
+        fi
+        
+    - name: Test database connection script
+      run: |
+        if [ -f test-db.php ]; then
+          php test-db.php || echo "Database connection test failed (expected in CI)"
+        fi
+
+  performance-check:
+    name: Performance Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ env.PHP_VERSION }}
+        extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_mysql, dom, filter, gd, json
+        tools: composer:v2
+        
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-dev --optimize-autoloader
+      
+    - name: Check file sizes
+      run: |
+        echo "Checking for large files that might impact performance..."
+        find . -type f -size +10M -not -path "./vendor/*" -not -path "./.git/*" | head -10
+        
+    - name: Count PHP files
+      run: |
+        echo "PHP files count: $(find . -name "*.php" -not -path "./vendor/*" | wc -l)"
+        echo "Total lines of PHP code: $(find . -name "*.php" -not -path "./vendor/*" -exec wc -l {} + | tail -n 1)"

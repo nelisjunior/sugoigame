@@ -1,24 +1,64 @@
-name: Deploy
+name: Deploy to Production
 
 on:
   push:
     branches: [ prod ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+
+env:
+  DEPLOY_PATH: /var/www/html
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy to Production
     runs-on: ubuntu-latest
+    # Note: Configure the following secrets in repository settings:
+    # - HOST: Server hostname or IP
+    # - USERNAME: SSH username  
+    # - KEY: SSH private key
+    # - PORT: SSH port (optional, defaults to 22)
+    
     steps:
-      - name: multiple command
-        uses: appleboy/ssh-action@master
+      - name: Deploy to Server
+        if: ${{ secrets.HOST != '' && secrets.USERNAME != '' && secrets.KEY != '' }}
+        uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
+          host: ${{ secrets.HOST || 'localhost' }}
+          username: ${{ secrets.USERNAME || 'user' }}
+          key: ${{ secrets.KEY || '' }}
+          port: ${{ secrets.PORT || '22' }}
           script: |
-            cd /var/www/html
-
+            cd ${{ env.DEPLOY_PATH }}
+            
+            # Verificar o status atual
+            echo "=== Status do Git ==="
             git status
-            git pull origin prod
+            
+            # Fazer backup antes do deploy
+            echo "=== Criando backup ==="
+            cp -r . ../backup_$(date +%Y%m%d_%H%M%S) || true
+            
+            # Atualizar código
+            echo "=== Atualizando código ==="
+            git fetch origin prod
+            git reset --hard origin/prod
+            
+            # Verificar se há dependências para atualizar
+            if [ -f "composer.json" ]; then
+              echo "=== Atualizando dependências do Composer ==="
+              composer install --no-dev --optimize-autoloader
+            fi
+            
+            # Limpar cache se necessário
+            echo "=== Limpando cache ==="
+            find . -name "*.cache" -delete || true
+            
+            echo "=== Deploy concluído com sucesso ==="
